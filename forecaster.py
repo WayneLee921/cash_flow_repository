@@ -13,6 +13,10 @@ def simulate_month (starting_balance, start_date, days_to_simulate, transactions
         current_day = start_date + timedelta(days = i)
         daily_change = 0
 
+        for t in transactions:
+            if t["day_of_month"] == current_day.day:
+                daily_change += t["amount"]
+
         current_balance += daily_change
 
         if current_balance < lowest_balance:
