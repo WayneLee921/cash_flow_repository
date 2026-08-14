@@ -9,6 +9,9 @@ def simulate_month (starting_balance, start_date, days_to_simulate, transactions
     lowest_balance = starting_balance
     lowest_day = start_date
 
+    overdraft_dates = []
+    is_overdrawn = starting_balance < 0
+
     for i in range(days_to_simulate):
         current_day = start_date + timedelta(days = i)
         daily_change = 0
@@ -23,8 +26,19 @@ def simulate_month (starting_balance, start_date, days_to_simulate, transactions
             lowest_balance = current_balance
             lowest_day = current_day
 
+        if current_balance < 0 and not is_overdrawn:
+            overdraft_dates.append({
+                "date": current_day,
+                "balance": current_balance
+            })
+            is_overdrawn = True
+
+        elif current_balance >= 0:
+            is_overdrawn = False
+
     return {
         "final_balance": current_balance,
         "lowest_balance": lowest_balance,
-        "lowest_day": lowest_day
+        "lowest_day": lowest_day,
+        "overdraft_dates": overdraft_dates
     }
